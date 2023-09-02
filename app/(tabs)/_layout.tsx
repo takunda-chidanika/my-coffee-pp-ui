@@ -1,55 +1,43 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
+import { Tabs } from "expo-router";
+import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { View } from "react-native-animatable";
 
-import Colors from '../../constants/Colors';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+export default function ScreenLayout() {
+    return (
+        <Tabs
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarShowLabel: false,
+                tabBarIcon: ({ focused, color, size }) => menuIcons(route, focused),
+                tabBarStyle: {
+                    marginBottom: 5,
+                    borderRadius: 50,
+                    backgroundColor: "rgb(209 213 219)",
+                    marginHorizontal: 40,
+                }
+            })}
+        >
+            <Tabs.Screen name="HomeScreen" />
+        </Tabs>
+    )
 }
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+const menuIcons = (route: any, focused: any) => {
+    let icon;
+    if (route.name == 'HomeScreen') {
+        icon = focused ? <AntDesign name="home" size={24} color="black" />
+            : <Entypo name="home" size={24} color="black" />
+    }
+    if (route.name == 'CoffeeDetailsScreen') {
+        icon = focused ? <AntDesign name="infocirlceo" size={24} color="black" />
+            : <AntDesign name="infocirlce" size={24} color="black" />
+    }
+    let bottomClass = focused ? "bg-white" : "";
+    return (
+        <View className={`flex items-center rounded-full p-2 shadow justify-center ${bottomClass}`}>
+            {icon}
+        </View>
+    )
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
 }
